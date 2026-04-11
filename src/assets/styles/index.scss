@@ -1,0 +1,32 @@
+@import "./variables.scss";
+@import "./element-override.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+}
+
+// 滚动条样式
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 175, 255, 0.3);
+  border-radius: 3px;
+
+  &:hover {
+    background: rgba(0, 175, 255, 0.5);
+  }
+}
+

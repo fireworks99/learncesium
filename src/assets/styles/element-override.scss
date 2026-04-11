@@ -1,0 +1,130 @@
+body {
+
+  .el-menu {
+    height: 100%;
+    border-right: none;
+    background-color: transparent !important;
+
+    // 菜单项基础样式
+    .el-menu-item {
+      background-color: transparent !important;
+      color: $text-secondary-color;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      height: 48px;
+      line-height: 48px;
+
+      i {
+        color: rgba(0, 175, 255, 0.6);
+        transition: all 0.3s ease;
+        margin-right: 8px;
+      }
+
+      &:hover {
+        background-color: rgba(0, 175, 255, 0.1) !important;
+        color: $primary-color !important;
+
+        i {
+          color: $primary-color;
+        }
+      }
+
+      &.is-active {
+        background: $primary-gradient !important;
+        color: $text-color !important;
+        box-shadow: inset 0 0 8px rgba(0, 175, 255, 0.5), $glow-shadow;
+
+        i {
+          color: $text-color !important;
+        }
+      }
+    }
+
+    // 子菜单样式
+    .el-submenu {
+      .el-submenu__title {
+        background-color: transparent !important;
+        color: $text-secondary-color;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        height: 48px;
+        line-height: 48px;
+
+        i {
+          color: rgba(0, 175, 255, 0.6);
+          transition: all 0.3s ease;
+          margin-right: 8px;
+        }
+
+        &:hover {
+          background-color: rgba(0, 175, 255, 0.1) !important;
+          color: $primary-color !important;
+
+          i {
+            color: $primary-color;
+          }
+        }
+      }
+
+      // 子菜单展开的箭头图标
+      .el-submenu__icon-arrow {
+        color: rgba(0, 175, 255, 0.6);
+        transition: all 0.3s ease;
+      }
+
+      &:hover .el-submenu__icon-arrow {
+        color: $primary-color;
+      }
+
+      // 子菜单展开后的样式
+      &.is-opened {
+        >.el-submenu__title {
+          color: $primary-color;
+
+          i {
+            color: $primary-color;
+          }
+
+          .el-submenu__icon-arrow {
+            color: $primary-color;
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+
+    // 嵌套子菜单样式
+    .el-menu--inline {
+      background-color: rgba(0, 0, 0, 0.2) !important;
+
+      .el-menu-item {
+        padding-left: 50px !important;
+
+        &:hover {
+          background-color: rgba(0, 175, 255, 0.15) !important;
+        }
+
+        &.is-active {
+          background: $primary-gradient !important;
+          width: calc(100% - 16px);
+        }
+      }
+
+      .el-submenu {
+        .el-submenu__title {
+          padding-left: 50px !important;
+
+          &:hover {
+            background-color: rgba(0, 175, 255, 0.15) !important;
+          }
+        }
+
+        .el-menu-item {
+          padding-left: 70px !important;
+        }
+      }
+    }
+  }
+
+  
+}

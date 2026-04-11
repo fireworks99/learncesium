@@ -1,0 +1,19 @@
+$sidebar-width: 200px;
+
+// ===== 主题配色 =====
+$primary-color: #00AFFF; // 主色（高亮蓝）
+$primary-gradient: linear-gradient(90deg, #0068B4, #00AFFF);
+$background-color: #092B4D; // 背景深蓝
+$secondary-color: #0068B4; // 辅助蓝
+$text-color: #FFFFFF;
+$text-secondary-color: #B0C4DE;
+$success-color: #00D08F;
+$warning-color: #FFB800;
+$danger-color: #FF4E50;
+
+// 阴影发光
+$glow-shadow: 0 0 10px rgba(0, 175, 255, 0.6);
+$glow-shadow-strong: 0 0 15px rgba(0, 175, 255, 0.8);
+
+// 圆角
+$border-radius: 8px;
