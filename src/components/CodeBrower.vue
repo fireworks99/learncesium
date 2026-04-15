@@ -4,15 +4,18 @@
       <span class="lang">{{ language }}</span>
       <button @click="copyCode">复制</button>
     </div>
-    <pre>
-      <code ref="codeRef" :class="language"></code>
-    </pre>
+    <div style="max-height: 600px; overflow-y: auto;">
+      <pre>
+        <code ref="codeRef" :class="language"></code>
+      </pre>
+    </div>
   </div>
 </template>
 
 <script>
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
+import { hljsLineNumbers } from '@/utils/highlight_line_number.js';
 import prettier from "prettier/standalone";
 import parserBabel from "prettier/parser-babel";
 
@@ -41,6 +44,9 @@ export default {
       }
     }
   },
+  mounted() {
+    hljsLineNumbers(window, document, hljs);
+  },
   methods: {
     formatCode() {
       try {
@@ -63,6 +69,10 @@ export default {
       if (!el) return;
       el.textContent = this.formattedCode;
       hljs.highlightElement(el);
+
+      this.$nextTick(() => {
+        hljs.lineNumbersBlock(el);
+      });
     },
     copyCode() {
       navigator.clipboard.writeText(this.formattedCode)
@@ -157,5 +167,31 @@ export default {
   :deep(.hljs-literal) {
     color: $warning-color;
   }
+
+
+
+  /* for block of numbers */
+  :deep(.hljs-ln-numbers) {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    text-align: center;
+    color: #ccc;
+    border-right: 1px solid #CCC;
+    vertical-align: top;
+    padding-right: 5px;
+
+    /* your custom style here */
+  }
+
+  /* for block of code */
+  :deep(.hljs-ln-code) {
+    padding-left: 10px;
+  }
+
 }
 </style>
