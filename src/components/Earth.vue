@@ -18,7 +18,10 @@ export default {
     this.initEarth();
   },
   beforeDestroy() {
-
+    if(window.viewer) {
+      window.viewer.destroy();
+      window.viewer = null;
+    }
   },
   methods: {
     initEarth() {
@@ -31,9 +34,10 @@ export default {
         baseLayerPicker: false,//右上角图层选择器
         showRenderLoopErrors: false,//HTML面板中显示错误信息
         fullscreenButton: true,//右下角全屏按钮
-        sceneModePicker: false,//右上角2D和3D之间的切换
-        scene3DOnly: true, // 如果设置为true，则所有几何图形以3D模式绘制以节约GPU资源
+        sceneModePicker: true,//右上角2D和3D之间的切换
+        scene3DOnly: false, // 改为false以启用2D/3D切换
         timeline: false, // 页面下方的时间条
+        homeButton: false,
         animation: false, // 左下角圆盘 速度控制器
         imageryProvider: new Cesium.ArcGisMapServerImageryProvider({
           url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
@@ -53,6 +57,7 @@ export default {
         destination: Cesium.Cartesian3.fromDegrees(100, 30, 5000000),
       });
 
+      window.viewer = viewer;
     }
   }
 }
