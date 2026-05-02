@@ -28,6 +28,7 @@ export default {
 
 <style scoped lang="scss">
 .home_wrapper {
+  height: 100%;
   display: flex;
 }
 </style>

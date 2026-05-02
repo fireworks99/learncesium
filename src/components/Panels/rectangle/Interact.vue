@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import Layout from '../Layout.vue';
-import CodeBrower from '../CodeBrower.vue';
+import Layout from '@/components/Layout.vue';
+import CodeBrower from '@/components/CodeBrower.vue';
 import { mapState } from 'vuex';
 
 let handler = null;
@@ -206,7 +206,7 @@ export default {
   },
   watch: {
     curSelect(val) {
-      val === "draw-rect-interact" && (this.panel_show = true);
+      val === "draw-rectangle-interact" && (this.panel_show = true);
     }
   },
   beforeDestroy() {

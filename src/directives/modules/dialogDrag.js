@@ -1,5 +1,7 @@
 import store from '@/store';
 
+const LEFT_MIN = 256;
+
 export default {
   name: 'dialogDrag',
   bind(el) {
@@ -43,7 +45,7 @@ export default {
         const maxTop = window.innerHeight - elHeight;
 
         // 限制边界
-        newLeft = Math.min(Math.max(0, newLeft), maxLeft);
+        newLeft = Math.min(Math.max(LEFT_MIN, newLeft), maxLeft);
         newTop = Math.min(Math.max(0, newTop), maxTop);
 
         el.style.left = newLeft + 'px';

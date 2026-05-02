@@ -11,8 +11,8 @@
 export default {
   name: 'Earth',
   components: {
-    RectDirect: () => import("./Panels/RectDirect.vue"),
-    RectInteract: () => import("./Panels/RectInteract.vue")
+    RectDirect: () => import("./Panels/rectangle/Direct.vue"),
+    RectInteract: () => import("./Panels/rectangle/Interact.vue")
   },
   mounted() {
     this.initEarth();

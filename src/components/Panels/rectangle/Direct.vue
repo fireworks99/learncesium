@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import Layout from '../Layout.vue';
-import CodeBrower from '../CodeBrower.vue';
+import Layout from '@/components/Layout.vue';
+import CodeBrower from '@/components/CodeBrower.vue';
 import { mapState } from 'vuex';
 
 export default {
@@ -120,7 +120,7 @@ export default {
   },
   watch: {
     curSelect(val) {
-      val === "draw-rect-direct" && (this.panel_show = true);
+      val === "draw-rectangle-direct" && (this.panel_show = true);
     }
   },
 

@@ -57,10 +57,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/variables.scss';
+
 .panel_wrapper {
   position: absolute;
-  z-index: 1;
-  left: calc(200px + 16px);
+  left: calc(#{$sidebar-width} + 16px);
   top: 16px;
   border-radius: 12px;
   overflow: hidden;

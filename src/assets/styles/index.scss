@@ -7,6 +7,10 @@
   box-sizing: border-box;
 }
 
+html, body, #app {
+  height: 100vh;
+}
+
 body {
   overflow: hidden;
 }
