@@ -6,7 +6,7 @@
         <el-button type="primary" @click="startDraw">开始绘制</el-button>
       </el-tab-pane>
       <el-tab-pane label="代码" name="code">
-        <CodeBrower :code="codeStr" language="javascript"/>
+        <CodeBrower :code="codeStr" language="javascript" />
       </el-tab-pane>
     </el-tabs>
   </Layout>
@@ -101,6 +101,28 @@ function startDrawRectangle() {
       );
     }, false);
   }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+  // 右键取消
+  handler.setInputAction(() => {
+    // 移除样式
+    viewer.container.classList.remove('draw-mode');
+
+    // 删除已创建的矩形（如果存在）
+    if (rectangleEntity) {
+      viewer.entities.remove(rectangleEntity);
+      rectangleEntity = null;
+    }
+
+    // 重置状态
+    startPoint = null;
+    drawing = false;
+
+    // 销毁事件
+    if (handler) {
+      handler.destroy();
+      handler = null;
+    }
+  }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 }
 
 export default {
@@ -197,7 +219,28 @@ export default {
                       );
                     }, false);
                   }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+                  // 右键取消
+                  handler.setInputAction(() => {
+
+                    // 删除已创建的矩形（如果存在）
+                    if (rectangleEntity) {
+                      viewer.entities.remove(rectangleEntity);
+                      rectangleEntity = null;
+                    }
+
+                    // 重置状态
+                    startPoint = null;
+                    drawing = false;
+
+                    // 销毁事件
+                    if (handler) {
+                      handler.destroy();
+                      handler = null;
+                    }
+                  }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
                 }
+
                 startDrawRectangle();`
     }
   },

@@ -11,7 +11,7 @@
 
         <el-submenu v-for="item in graph" :key="item.value" :index="'draw-' + item.value">
           <template slot="title">
-            <i class="el-icon-c-scale-to-original"></i>
+            <img :src="require(`@/assets/icons/${item.value}.svg`)" alt="">
             <span>{{ item.label }}</span>
           </template>
           <el-menu-item :index="'draw-' + item.value + '-direct'">
@@ -85,5 +85,11 @@ export default {
 .my-el-menu {
   overflow-x: hidden;
   overflow-y: auto;
+
+  img {
+    width: 32px;
+    height: 32px;
+    padding-right: 8px;
+  }
 }
 </style>
