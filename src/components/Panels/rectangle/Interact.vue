@@ -104,9 +104,7 @@ function startDrawRectangle() {
 
   // 右键取消
   handler.setInputAction(() => {
-    // 移除样式
-    viewer.container.classList.remove('draw-mode');
-
+    
     // 删除已创建的矩形（如果存在）
     if (rectangleEntity) {
       viewer.entities.remove(rectangleEntity);
