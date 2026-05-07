@@ -3,6 +3,9 @@
 
     <RectDirect />
     <RectInteract />
+    
+    <PolygonDirect />
+    <PolygonInteract />
 
   </div>
 </template>
@@ -12,7 +15,9 @@ export default {
   name: 'Earth',
   components: {
     RectDirect: () => import("./Panels/rectangle/Direct.vue"),
-    RectInteract: () => import("./Panels/rectangle/Interact.vue")
+    RectInteract: () => import("./Panels/rectangle/Interact.vue"),
+    PolygonDirect: () => import("./Panels/polygon/Direct.vue"),
+    PolygonInteract: () => import("./Panels/polygon/Interact.vue"),
   },
   mounted() {
     this.initEarth();

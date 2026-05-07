@@ -200,6 +200,9 @@ export function hljsLineNumbers (w, d, hljs) {
 
     function addLineNumbersBlockFor (inputHtml, options) {
         var lines = getLines(inputHtml);
+
+        if(lines.length === 0) return inputHtml;
+
         // if last line contains only carriage return remove it
         if (lines[lines.length-1].trim() === '') {
             lines.pop();
