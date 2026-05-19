@@ -5,9 +5,7 @@
       <button @click="copyCode">复制</button>
     </div>
     <div style="max-height: 600px; overflow-y: auto;">
-      <pre>
-        <code ref="codeRef" :class="language"></code>
-      </pre>
+      <pre><code ref="codeRef" :class="language"></code></pre>
     </div>
   </div>
 </template>

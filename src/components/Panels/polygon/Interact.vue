@@ -1,13 +1,34 @@
 <template>
   <Layout :panel_show.sync="panel_show" title="多边形绘制-交互绘制">
     <el-tabs v-model="activeName" type="card">
-      <el-tab-pane label="执行" name="exec">
-        <el-button @click="clear">清除</el-button>
-        <el-button type="primary" @click="start">开始绘制</el-button>
+
+      <!-- 1. 新增 -->
+      <el-tab-pane label="新增" name="insert">
+        <div style="text-align: center; margin-bottom: 8px;">
+          <el-button type="primary" @click="start">开始绘制</el-button>
+        </div>
+
+        <Collapse title="代码">
+          <CodeBrower :code="createScript" language="javascript" />
+        </Collapse>
       </el-tab-pane>
-      <el-tab-pane label="代码" name="code">
-        <CodeBrower :code="codeStr" language="javascript" />
+
+      <!-- 2. 编辑 -->
+      <el-tab-pane label="编辑" name="update">
+
       </el-tab-pane>
+
+      <!-- 3. 删除 -->
+      <el-tab-pane label="删除" name="delete">
+        <div style="text-align: center; margin-bottom: 8px;">
+          <el-button @click="clear">删除</el-button>
+        </div>
+        
+        <Collapse title="代码">
+          <CodeBrower :code="deleteScript" language="javascript" />
+        </Collapse>
+      </el-tab-pane>
+
     </el-tabs>
   </Layout>
 </template>
@@ -15,6 +36,8 @@
 <script>
 import Layout from '@/components/Layout.vue';
 import CodeBrower from '@/components/CodeBrower.vue';
+import Collapse from '@/components/Collapse.vue';
+import { createScript, deleteScript } from './script';
 import { mapState } from 'vuex';
 
 let state = -1;             // 1 => 创建中, 2 => 编辑中, -1 => 静止态
@@ -24,7 +47,6 @@ let pointList = [];         // 所有点
 let floatPoint = null;      // 当前移动点
 let entity = null;          // 绘制过程中的动态载体
 let primitive = null;       // 绘制结束得到的结果载体
-
 
 const img = `data:image/svg+xml;base64,
   PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/
@@ -45,7 +67,7 @@ const img = `data:image/svg+xml;base64,
 
 // 移除相关handler
 function clearHandlers() {
-  if(handler) {
+  if (handler) {
     handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
     handler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
     handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
@@ -53,7 +75,7 @@ function clearHandlers() {
     handler.destroy();
     handler = null;
   }
-  if(modifyHandler) {
+  if (modifyHandler) {
     modifyHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
     modifyHandler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
     modifyHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
@@ -78,12 +100,12 @@ function createPoint(cartesian) {
   })
 }
 
-// 动态载体
+// 过程载体
 function createEntity() {
 
   // 动态线
   const linePositions = new Cesium.CallbackProperty(() => {
-    return [...pointList];
+    return pointList.length < 3 ? [...pointList] : [...pointList, pointList[0]];
   }, false);
 
   // 动态面
@@ -95,16 +117,13 @@ function createEntity() {
     polyline: new Cesium.PolylineGraphics({
       positions: linePositions,
       width: 2,
-      material: Cesium.Color.BLUE,
+      material: Cesium.Color.RED,
       clampToGround: true,
-      show: new Cesium.CallbackProperty(() => {
-        return pointList.length < 3;
-      }, false),
     }),
 
     polygon: new Cesium.PolygonGraphics({
       hierarchy: polygonHierarchy,
-      material: Cesium.Color.BLUE.withAlpha(0.4),
+      material: Cesium.Color.SNOW.withAlpha(0.7),
       heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
       show: new Cesium.CallbackProperty(() => {
         return pointList.length >= 3;
@@ -126,16 +145,17 @@ function showPrimitiveOnMap() {
   return viewer.scene.groundPrimitives.add(
     new Cesium.GroundPrimitive({
       geometryInstances: instance,
-        appearance: new Cesium.Appearance({
-          material: Cesium.Material.fromType("Color", {
-            color: Cesium.Color.LIGHTSKYBLUE
-          }),
-        })
+      appearance: new Cesium.Appearance({
+        material: Cesium.Material.fromType("Color", {
+          color: Cesium.Color.SNOW.withAlpha(0.7)
+        }),
+      })
     })
   );
 
 }
 
+// 开始绘制
 function startDraw() {
   state = 1;
 
@@ -199,22 +219,43 @@ function startDraw() {
 
   // 右键单击 => 取消绘制
   handler.setInputAction((evt) => {
-
+    clearDraw();
   }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
 
+}
+
+// 取消绘制 && 清除绘制
+function clearDraw() {
+  state = -1;
+  clearHandlers();
+  pointList = [];
+  if (floatPoint) {
+    viewer.billboards.remove(floatPoint);
+    floatPoint = null;
+  }
+  if (entity) {
+    viewer.entities.remove(entity);
+    entity = null;
+  }
+  if (primitive) {
+    viewer.scene.groundPrimitives.remove(primitive);
+    primitive = null;
+  }
 }
 
 export default {
   name: 'PolygonInteract',
   components: {
     Layout,
-    CodeBrower
+    CodeBrower,
+    Collapse
   },
   data() {
     return {
       panel_show: false,
-      activeName: 'exec',
-      codeStr: ''
+      activeName: 'insert',
+      createScript,
+      deleteScript
     }
   },
   computed: {
@@ -230,7 +271,7 @@ export default {
   },
   methods: {
     clear() {
-
+      clearDraw();
     },
 
     start() {
