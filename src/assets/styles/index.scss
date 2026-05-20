@@ -13,6 +13,12 @@ html, body, #app {
 
 body {
   overflow: hidden;
+
+  .flex_center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 // 滚动条样式

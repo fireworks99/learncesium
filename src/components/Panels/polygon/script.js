@@ -336,4 +336,4 @@ export const updateScript = `
   }
 
   startModify();
-`
+`;

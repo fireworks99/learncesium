@@ -817,5 +817,10 @@
         }
       }
     }
+
+    .el-radio__inner {
+      border: 1px solid $primary-color;
+    }
+
   }
 }

@@ -4,8 +4,8 @@
       <span class="lang">{{ language }}</span>
       <button @click="copyCode">复制</button>
     </div>
-    <div style="max-height: 600px; overflow-y: auto;">
-      <pre><code ref="codeRef" :class="language"></code></pre>
+    <div :style="`max-height: ${maxHeight}px; overflow-y: auto;`">
+      <pre><code ref="codeRef" :class="`language-${language}`"></code></pre>
     </div>
   </div>
 </template>
@@ -27,6 +27,10 @@ export default {
     language: {
       type: String,
       default: "javascript"
+    },
+    maxHeight: {
+      type: Number,
+      default: 600
     }
   },
   data() {
@@ -65,7 +69,13 @@ export default {
     highlight() {
       const el = this.$refs.codeRef;
       if (!el) return;
+
+      // 清理旧高亮状态
+      delete el.dataset.highlighted;
+      el.classList.remove('hljs');
+
       el.textContent = this.formattedCode;
+
       hljs.highlightElement(el);
 
       this.$nextTick(() => {
