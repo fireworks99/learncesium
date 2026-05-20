@@ -167,21 +167,39 @@
     }
 
     .el-button--success {
-      background: $success-color;
+      background: linear-gradient(90deg, #009966, $success-color);
       border: none;
       color: $text-color;
+      box-shadow: 0 0 10px rgba(0, 208, 143, 0.5);
+    }
+
+    .el-button--success:hover {
+      background: linear-gradient(90deg, $success-color, #009966);
+      box-shadow: 0 0 15px rgba(0, 208, 143, 0.7);
     }
 
     .el-button--warning {
-      background: $warning-color;
+      background: linear-gradient(90deg, #D98E00, $warning-color);
       border: none;
       color: #000;
+      box-shadow: 0 0 10px rgba(255, 184, 0, 0.5);
+    }
+
+    .el-button--warning:hover {
+      background: linear-gradient(90deg, $warning-color, #D98E00);
+      box-shadow: 0 0 15px rgba(255, 184, 0, 0.7);
     }
 
     .el-button--danger {
-      background: $danger-color;
+      background: linear-gradient(90deg, #C62828, $danger-color);
       border: none;
       color: $text-color;
+      box-shadow: 0 0 10px rgba(255, 78, 80, 0.5);
+    }
+
+    .el-button--danger:hover {
+      background: linear-gradient(90deg, $danger-color, #C62828);
+      box-shadow: 0 0 15px rgba(255, 78, 80, 0.7);
     }
 
     // ===== 表格 =====

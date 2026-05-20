@@ -5,7 +5,7 @@
       <!-- 1. 新增 -->
       <el-tab-pane label="新增" name="insert">
         <div style="text-align: center; margin-bottom: 8px;">
-          <el-button type="primary" @click="start">开始绘制</el-button>
+          <el-button type="primary" @click="create">开始绘制</el-button>
         </div>
 
         <Collapse title="代码">
@@ -15,15 +15,21 @@
 
       <!-- 2. 编辑 -->
       <el-tab-pane label="编辑" name="update">
+        <div style="text-align: center; margin-bottom: 8px;">
+          <el-button type="success" @click="update">开始编辑</el-button>
+        </div>
 
+        <Collapse title="代码">
+          <CodeBrower :code="updateScript" language="javascript" />
+        </Collapse>
       </el-tab-pane>
 
       <!-- 3. 删除 -->
       <el-tab-pane label="删除" name="delete">
         <div style="text-align: center; margin-bottom: 8px;">
-          <el-button @click="clear">删除</el-button>
+          <el-button type="danger" @click="clear">删除</el-button>
         </div>
-        
+
         <Collapse title="代码">
           <CodeBrower :code="deleteScript" language="javascript" />
         </Collapse>
@@ -37,7 +43,7 @@
 import Layout from '@/components/Layout.vue';
 import CodeBrower from '@/components/CodeBrower.vue';
 import Collapse from '@/components/Collapse.vue';
-import { createScript, deleteScript } from './script';
+import { createScript, deleteScript, updateScript } from './script';
 import { mapState } from 'vuex';
 
 let state = -1;             // 1 => 创建中, 2 => 编辑中, -1 => 静止态
@@ -47,6 +53,9 @@ let pointList = [];         // 所有点
 let floatPoint = null;      // 当前移动点
 let entity = null;          // 绘制过程中的动态载体
 let primitive = null;       // 绘制结束得到的结果载体
+
+let floatPointArr = [];     // 编辑时用到的浮动点
+let step = -1;              // 编辑时浮动点的下标
 
 const img = `data:image/svg+xml;base64,
   PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/
@@ -205,6 +214,10 @@ function startDraw() {
   handler.setInputAction((evt) => {
 
     if (pointList.length < 3) return;
+
+    // 删除双击带来的两个重复点
+    pointList.splice(pointList.length - 2, 2);
+
     state = -1;
     primitive = showPrimitiveOnMap();
 
@@ -241,6 +254,95 @@ function clearDraw() {
     viewer.scene.groundPrimitives.remove(primitive);
     primitive = null;
   }
+
+  if (floatPointArr) {
+    floatPointArr.forEach(p => {
+      viewer.billboards.remove(p);
+    });
+    floatPointArr = [];
+  }
+}
+
+// 开始编辑
+function startModify() {
+  if (!modifyHandler) {
+    modifyHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+  }
+  state = 2;
+  pointList.forEach(p => {
+    const billboard = createPoint(p);
+    floatPointArr.push(billboard);
+  });
+
+  // 将创建好的primitive删除，并添加entity过程载体
+  entity = createEntity();
+  viewer.scene.groundPrimitives.remove(primitive);
+  primitive = null;
+
+  // 左键单击 => 选择点 or 放置点
+  modifyHandler.setInputAction(evt => {
+    const ray = viewer.camera.getPickRay(evt.position);
+    const cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+    if (!cartesian) return;
+
+    // 如果有移动点在跟随鼠标移动，则在单击的时候放置该点
+    if (step !== -1) {
+      pointList[step] = cartesian.clone();
+      step = -1;
+
+      floatPoint = null;
+      return;
+    } else {
+      // 如果没有移动点跟随鼠标移动，则在单击的时候查看是否有要素，如有则设置跟随点
+      const feature = viewer.scene.pick(evt.position);
+      if (Cesium.defined(feature) && feature.primitive instanceof Cesium.Billboard) {
+        // 选中点
+        floatPoint = feature.primitive;
+        step = floatPointArr.indexOf(floatPoint);
+      } else {
+        // 结束绘制
+        overModify();
+      }
+    }
+
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+  // 鼠标移动
+  modifyHandler.setInputAction(evt => {
+    if (step != -1 && floatPoint) {
+      const ray = viewer.camera.getPickRay(evt.endPosition);
+      const cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+      if (!cartesian) return;
+
+      floatPoint.position = cartesian.clone();
+      pointList[step] = cartesian.clone();
+    }
+  }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+}
+
+// 结束编辑
+function overModify() {
+  //取消“面”的选中，结束本次修改
+  if (floatPoint) {
+    viewer.billboards.remove(floatPoint);
+    floatPoint = null;
+  }
+  state = -1;
+  step = -1;
+
+  if (floatPointArr) {
+    floatPointArr.forEach(p => {
+      viewer.billboards.remove(p);
+    });
+    floatPointArr = [];
+  }
+
+  primitive = showPrimitiveOnMap();
+
+  viewer.entities.remove(entity);
+  entity = null;
+
+  clearHandlers();
 }
 
 export default {
@@ -255,7 +357,8 @@ export default {
       panel_show: false,
       activeName: 'insert',
       createScript,
-      deleteScript
+      deleteScript,
+      updateScript
     }
   },
   computed: {
@@ -274,8 +377,12 @@ export default {
       clearDraw();
     },
 
-    start() {
+    create() {
       startDraw();
+    },
+
+    update() {
+      startModify();
     }
 
   }// methods end

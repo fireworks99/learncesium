@@ -8,22 +8,22 @@ export const createScript = `
   let entity = null;          // 绘制过程中的动态载体
   let primitive = null;       // 绘制结束得到的结果载体
 
-  const img = \`data: image/svg+xml;base64,
-  PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI /
+  const img = \`data:image/svg+xml;base64,
+    PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/
     PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBT
-  VkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBo
-  aWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI + PHN2ZyB0PSIx
-  Nzc4MDY0MDg2Nzc2IiBjbGFzcz0iaWNvbiIgdmlld0JveD0i
-  MCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0i
-  aHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE1
-  Mjk4IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHhtbG5zOnhs
-  aW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48
-  cGF0aCBkPSJNNTEyIDUxMm0tNTEyIDBhNTEyIDUxMiAwIDEg
-  MCAxMDI0IDAgNTEyIDUxMiAwIDEgMC0xMDI0IDBaIiBmaWxs
-  PSJyZWQiIHAtaWQ9IjE1Mjk5Ij48L3BhdGg + PHBhdGggZD0i
-  TTUxMiA1MTJtLTI1NiAwYTI1NiAyNTYgMCAxIDAgNTEyIDAg
-  MjU2IDI1NiAwIDEgMC01MTIgMFoiIGZpbGw9InllbGxvdyIg
-  cC1pZD0iMTUzMDAiPjwvcGF0aD48L3N2Zz4 = \`;
+    VkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBo
+    aWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIx
+    Nzc4MDY0MDg2Nzc2IiBjbGFzcz0iaWNvbiIgdmlld0JveD0i
+    MCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0i
+    aHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE1
+    Mjk4IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHhtbG5zOnhs
+    aW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48
+    cGF0aCBkPSJNNTEyIDUxMm0tNTEyIDBhNTEyIDUxMiAwIDEg
+    MCAxMDI0IDAgNTEyIDUxMiAwIDEgMC0xMDI0IDBaIiBmaWxs
+    PSJyZWQiIHAtaWQ9IjE1Mjk5Ij48L3BhdGg+PHBhdGggZD0i
+    TTUxMiA1MTJtLTI1NiAwYTI1NiAyNTYgMCAxIDAgNTEyIDAg
+    MjU2IDI1NiAwIDEgMC01MTIgMFoiIGZpbGw9InllbGxvdyIg
+    cC1pZD0iMTUzMDAiPjwvcGF0aD48L3N2Zz4=\`;
 
   // 移除相关handler
   function clearHandlers() {
@@ -165,6 +165,10 @@ export const createScript = `
     handler.setInputAction((evt) => {
 
       if (pointList.length < 3) return;
+
+      // 删除双击带来的两个重复点
+      pointList.splice(pointList.length - 2, 2);
+
       state = -1;
       primitive = showPrimitiveOnMap();
 
@@ -201,6 +205,13 @@ export const createScript = `
       viewer.scene.groundPrimitives.remove(primitive);
       primitive = null;
     }
+
+    if (floatPointArr) {
+      floatPointArr.forEach(p => {
+        viewer.billboards.remove(p);
+      });
+      floatPointArr = [];
+    }
   }
 
   startDraw();
@@ -225,7 +236,104 @@ export const deleteScript = `
       viewer.scene.groundPrimitives.remove(primitive);
       primitive = null;
     }
+
+    if (floatPointArr) {
+      floatPointArr.forEach(p => {
+        viewer.billboards.remove(p);
+      });
+      floatPointArr = [];
+    }
   }
 
   clearDraw();
 `;
+
+// 编辑
+export const updateScript = `
+  let floatPointArr = [];     // 编辑时用到的浮动点
+  let step = -1;              // 编辑时浮动点的下标
+
+  // 开始编辑
+  function startModify() {
+    if (!modifyHandler) {
+      modifyHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+    }
+    state = 2;
+    pointList.forEach(p => {
+      const billboard = createPoint(p);
+      floatPointArr.push(billboard);
+    });
+
+    // 将创建好的primitive删除，并添加entity过程载体
+    entity = createEntity();
+    viewer.scene.groundPrimitives.remove(primitive);
+    primitive = null;
+
+    // 左键单击 => 选择点 or 放置点
+    modifyHandler.setInputAction(evt => {
+      const ray = viewer.camera.getPickRay(evt.position);
+      const cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+      if (!cartesian) return;
+
+      // 如果有移动点在跟随鼠标移动，则在单击的时候放置该点
+      if (step !== -1) {
+        pointList[step] = cartesian.clone();
+        step = -1;
+
+        floatPoint = null;
+        return;
+      } else {
+        // 如果没有移动点跟随鼠标移动，则在单击的时候查看是否有要素，如有则设置跟随点
+        const feature = viewer.scene.pick(evt.position);
+        if (Cesium.defined(feature) && feature.primitive instanceof Cesium.Billboard) {
+          // 选中点
+          floatPoint = feature.primitive;
+          step = floatPointArr.indexOf(floatPoint);
+        } else {
+          // 结束绘制
+          overModify();
+        }
+      }
+
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    // 鼠标移动
+    modifyHandler.setInputAction(evt => {
+      if (step != -1 && floatPoint) {
+        const ray = viewer.camera.getPickRay(evt.endPosition);
+        const cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+        if (!cartesian) return;
+
+        floatPoint.position = cartesian.clone();
+        pointList[step] = cartesian.clone();
+      }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+  }
+
+  // 结束编辑
+  function overModify() {
+    //取消“面”的选中，结束本次修改
+    if (floatPoint) {
+      viewer.billboards.remove(floatPoint);
+      floatPoint = null;
+    }
+    state = -1;
+    step = -1;
+
+    if (floatPointArr) {
+      floatPointArr.forEach(p => {
+        viewer.billboards.remove(p);
+      });
+      floatPointArr = [];
+    }
+
+    primitive = showPrimitiveOnMap();
+
+    viewer.entities.remove(entity);
+    entity = null;
+
+    clearHandlers();
+  }
+
+  startModify();
+`
