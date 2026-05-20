@@ -7,6 +7,9 @@
     <PolygonDirect />
     <PolygonInteract />
 
+    <TailedSquadCombatDirect />
+    <TailedSquadCombatInteract />
+
   </div>
 </template>
 
@@ -18,6 +21,8 @@ export default {
     RectInteract: () => import("./Panels/rectangle/Interact.vue"),
     PolygonDirect: () => import("./Panels/polygon/Direct.vue"),
     PolygonInteract: () => import("./Panels/polygon/Interact.vue"),
+    TailedSquadCombatDirect: () => import("./Panels/tailedSquadCombat/Direct.vue"),
+    TailedSquadCombatInteract: () => import("./Panels/tailedSquadCombat/Interact.vue"),
   },
   mounted() {
     this.initEarth();
