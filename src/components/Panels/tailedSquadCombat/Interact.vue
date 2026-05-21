@@ -35,10 +35,10 @@ let pointList = [];         // 所有点
 let floatPoint = null;      // 当前移动点
 let entity = null;          // 绘制过程中的动态载体
 let primitive = null;       // 绘制结束得到的结果载体
-let minPointsNum = 2;       // 最少能满足条件的点
-
 let floatPointArr = [];     // 编辑时用到的浮动点
 let step = -1;              // 编辑时浮动点的下标
+
+let minPointsNum = 2;       // 最少能满足条件的点
 
 const img = `data:image/svg+xml;base64,
   PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/

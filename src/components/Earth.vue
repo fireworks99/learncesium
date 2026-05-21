@@ -1,9 +1,13 @@
 <template>
   <div id="cesium_container">
 
+    <div class="mock-btn" title="公共脚本">
+      <img src="@/assets/images/js.svg" alt="">
+    </div>
+
     <RectDirect />
     <RectInteract />
-    
+
     <PolygonDirect />
     <PolygonInteract />
 
@@ -28,7 +32,7 @@ export default {
     this.initEarth();
   },
   beforeDestroy() {
-    if(window.viewer) {
+    if (window.viewer) {
       window.viewer.destroy();
       window.viewer = null;
     }
@@ -79,5 +83,36 @@ export default {
 #cesium_container {
   height: 100vh;
   flex: 1;
+
+  .mock-btn {
+    position: absolute;
+    top: calc(5px + 32px + 8px);
+    right: 5px;
+    z-index: 1;
+    padding: 4px;
+
+    margin: 0 3px;
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #303336;
+    border: 1px solid #444;
+    border-radius: 14%;
+    cursor: pointer;
+
+    &:hover {
+      background: #48b;
+      border-color: #aef;
+      box-shadow: 0 0 8px #fff;
+    }
+
+    img {
+      width: 100%;
+    }
+  }
 }
 </style>
