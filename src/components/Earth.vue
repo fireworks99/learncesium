@@ -1,9 +1,19 @@
 <template>
   <div id="cesium_container">
 
-    <div class="mock-btn" title="公共脚本">
-      <img src="@/assets/images/js.svg" alt="">
-    </div>
+    <el-popover placement="left" trigger="click" ref="popover">
+      <el-button type="success" @click="handleScript(1)">工具函数 (P.PlotUtils)</el-button>
+      <el-button type="primary" @click="handleScript(2)">固定点数图形-公共方法</el-button>
+      <el-button type="primary" @click="handleScript(3)">无数点数图形-公共方法</el-button>
+
+      <div class="mock-btn" title="公共脚本" slot="reference">
+        <img src="@/assets/images/js.svg" alt="">
+      </div>
+    </el-popover>
+
+    <CustomDrawer :visible.sync="drawerOpen">
+      <CodeBrower :code="script" language="javascript" :maxHeight="maxHeight"/>
+    </CustomDrawer>
 
     <RectDirect />
     <RectInteract />
@@ -18,9 +28,13 @@
 </template>
 
 <script>
+import { PlotUtilsScript } from "./Panels/scripts";
+
 export default {
   name: 'Earth',
   components: {
+    CustomDrawer: () => import("./CustomDrawer.vue"),
+    CodeBrower: () => import("./CodeBrower.vue"),
     RectDirect: () => import("./Panels/rectangle/Direct.vue"),
     RectInteract: () => import("./Panels/rectangle/Interact.vue"),
     PolygonDirect: () => import("./Panels/polygon/Direct.vue"),
@@ -28,15 +42,31 @@ export default {
     TailedSquadCombatDirect: () => import("./Panels/tailedSquadCombat/Direct.vue"),
     TailedSquadCombatInteract: () => import("./Panels/tailedSquadCombat/Interact.vue"),
   },
+  
+  data() {
+    return {
+      drawerOpen: false,
+      script: PlotUtilsScript
+    }
+  },
+
+  computed: {
+    maxHeight() {
+      return parseFloat(innerHeight) - 16 * 2 - 42;
+    }
+  },
+
   mounted() {
     this.initEarth();
   },
+
   beforeDestroy() {
     if (window.viewer) {
       window.viewer.destroy();
       window.viewer = null;
     }
   },
+
   methods: {
     initEarth() {
       Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiY2ExNmYyOC0yYjk5LTRjOGMtYTI0ZC0xZmFmMDAwMzhlZDUiLCJpZCI6NTI1MjgsImlhdCI6MTYxODY2NjE5N30.ETTMOAYLjTMplvAxKehiZCrzT1o2s--bFqREAOSP3fg';
@@ -72,8 +102,13 @@ export default {
       });
 
       window.viewer = viewer;
+    },
+
+    handleScript(type) {
+      this.drawerOpen = true;
+      this.$refs.popover.doClose();
     }
-  }
+  }// methods end
 }
 </script>
 

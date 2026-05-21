@@ -151,13 +151,17 @@ export default {
   // 可选：微调 highlight.js 默认颜色，使其更贴近你的主题
   :deep(.hljs) {
     background: transparent;
-    color: $text-color;
+    // color: $text-color;
   }
 
   :deep(.hljs-keyword),
   :deep(.hljs-selector-tag),
   :deep(.hljs-built_in) {
     color: $primary-color;
+  }
+
+  :deep(.hljs-attr) {
+    color: pink;
   }
 
   :deep(.hljs-string),
