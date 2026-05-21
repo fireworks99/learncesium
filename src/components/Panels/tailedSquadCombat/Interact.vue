@@ -454,7 +454,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['curSelect'])
+    ...mapState(['curSelect', 'stopLast'])
   },
   watch: {
     curSelect(val) {
@@ -470,6 +470,8 @@ export default {
     },
 
     create() {
+      this.stopLast && this.stopLast();
+      this.$store.commit("SET_STOP_LAST", this.clear);
       startDraw();
     },
 

@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currMaxZIndex: 1,
-    curSelect: ''
+    curSelect: '',
+    stopLast: null
   },
   getters: {
   },
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
     SET_CUR_SELECT(state, val) {
       state.curSelect = val;
+    },
+    SET_STOP_LAST(state, val) {
+      state.stopLast = val;
     }
   },
   actions: {
