@@ -166,12 +166,9 @@ function showPrimitiveOnMap() {
 
 // 开始绘制
 function startDraw() {
-  state = 1;
 
-  if (handler) {
-    handler.destroy();
-    handler = null;
-  }
+  clearDraw();
+  state = 1;
   handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
 
   // 左键单击 => 确定各点
