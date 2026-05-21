@@ -11,8 +11,8 @@
       </div>
     </el-popover>
 
-    <CustomDrawer :visible.sync="drawerOpen">
-      <CodeBrower :code="script" language="javascript" :maxHeight="maxHeight"/>
+    <CustomDrawer :visible.sync="drawerOpen" title="工具函数 (P.PlotUtils)">
+      <CodeBrower :code="script" language="javascript" :maxHeight="maxHeight" />
     </CustomDrawer>
 
     <RectDirect />
@@ -42,7 +42,7 @@ export default {
     TailedSquadCombatDirect: () => import("./Panels/tailedSquadCombat/Direct.vue"),
     TailedSquadCombatInteract: () => import("./Panels/tailedSquadCombat/Interact.vue"),
   },
-  
+
   data() {
     return {
       drawerOpen: false,
@@ -52,7 +52,7 @@ export default {
 
   computed: {
     maxHeight() {
-      return parseFloat(innerHeight) - 16 * 2 - 42;
+      return parseFloat(innerHeight) - 32 - 16 - 16 * 2 - 42;
     }
   },
 
@@ -105,8 +105,18 @@ export default {
     },
 
     handleScript(type) {
-      this.drawerOpen = true;
+
+      // 1. 先让当前活动元素失去焦点，转移到 body 或其他安全元素
+      if (document.activeElement && document.activeElement.blur) {
+        // 解决 aria-hidden="true" 警告
+        document.activeElement.blur();
+      }
+
+      // 2. 再关闭 Popover
       this.$refs.popover.doClose();
+
+      // 3. 打开抽屉
+      this.drawerOpen = true;
     }
   }// methods end
 }
