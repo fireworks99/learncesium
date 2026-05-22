@@ -1,27 +1,14 @@
 <template>
   <Layout :panel_show.sync="panel_show" title="分队战斗行动（尾）绘制-交互绘制">
-    <el-tabs v-model="activeName" type="card">
-      <!-- 1. 新增 -->
-      <el-tab-pane label="新增" name="insert">
-        <div style="text-align: center; margin-bottom: 8px;">
-          <el-button type="primary" @click="create">开始绘制</el-button>
-        </div>
-      </el-tab-pane>
+    <div style="text-align: center; margin-bottom: 8px;">
+      <el-button type="primary" @click="create">开始绘制</el-button>
+      <el-button type="success" @click="update">开始编辑</el-button>
+      <el-button type="danger" @click="clear">删除</el-button>
+    </div>
 
-      <!-- 2. 编辑 -->
-      <el-tab-pane label="编辑" name="update">
-        <div style="text-align: center; margin-bottom: 8px;">
-          <el-button type="success" @click="update">开始编辑</el-button>
-        </div>
-      </el-tab-pane>
-
-      <!-- 3. 删除 -->
-      <el-tab-pane label="删除" name="delete">
-        <div style="text-align: center; margin-bottom: 8px;">
-          <el-button type="danger" @click="clear">删除</el-button>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
+    <Collapse title="①工具函数 + ②无数点数图形-公共方法 + ③以下代码，即可完成增删改">
+      <CodeBrower :code="script" language="javascript" :maxHeight="maxHeight"/>
+    </Collapse>
   </Layout>
 </template>
 
@@ -32,7 +19,7 @@ import Collapse from '@/components/Collapse.vue';
 import { mapState } from 'vuex';
 
 
-import { createEntity, showPrimitiveOnMap } from './script';
+import { createEntity, showPrimitiveOnMap, script } from './script';
 import { useUnfixed } from '../useUnfixed';
 
 const {
@@ -55,11 +42,15 @@ export default {
   data() {
     return {
       panel_show: false,
-      activeName: 'insert',
+      script
     }
   },
   computed: {
-    ...mapState(['curSelect', 'stopLast'])
+    ...mapState(['curSelect', 'stopLast']),
+
+    maxHeight() {
+      return parseFloat(innerHeight) - 250;
+    }
   },
   watch: {
     curSelect(val) {

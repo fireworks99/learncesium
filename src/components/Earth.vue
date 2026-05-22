@@ -2,17 +2,17 @@
   <div id="cesium_container">
 
     <el-popover placement="left" trigger="click" ref="popover">
-      <el-button type="success" @click="handleScript(1)">工具函数 (P.PlotUtils)</el-button>
-      <el-button type="primary" @click="handleScript(2)">固定点数图形-公共方法</el-button>
-      <el-button type="primary" @click="handleScript(3)">无数点数图形-公共方法</el-button>
+      <el-button v-for="(item, index) in publicScripts" :key="item.label" :type="item.type" @click="handleScript(index)">
+        {{ item.label }}
+      </el-button>
 
       <div class="mock-btn" title="公共脚本" slot="reference">
         <img src="@/assets/images/js.svg" alt="">
       </div>
     </el-popover>
 
-    <CustomDrawer :visible.sync="drawerOpen" title="工具函数 (P.PlotUtils)">
-      <CodeBrower :code="script" language="javascript" :maxHeight="maxHeight" />
+    <CustomDrawer :visible.sync="drawerOpen" :title="curScript?.label">
+      <CodeBrower :code="curScript?.value || ''" language="javascript" :maxHeight="maxHeight" />
     </CustomDrawer>
 
     <RectDirect />
@@ -29,6 +29,7 @@
 
 <script>
 import { PlotUtilsScript } from "./Panels/scripts";
+import { useUnfixedScript } from "./Panels/useUnfixed";
 
 export default {
   name: 'Earth',
@@ -46,7 +47,12 @@ export default {
   data() {
     return {
       drawerOpen: false,
-      script: PlotUtilsScript
+      publicScripts: [
+        { type: 'success', label: '工具函数 (P.PlotUtils)', value: PlotUtilsScript },
+        { type: 'primary', label: '固定点数图形-公共方法', value: '' },
+        { type: 'primary', label: '无数点数图形-公共方法', value: useUnfixedScript },
+      ],
+      curScript: {}
     }
   },
 
@@ -104,7 +110,9 @@ export default {
       window.viewer = viewer;
     },
 
-    handleScript(type) {
+    handleScript(idx) {
+
+      this.curScript = this.publicScripts.length > idx ? this.publicScripts[idx] : {};
 
       // 1. 先让当前活动元素失去焦点，转移到 body 或其他安全元素
       if (document.activeElement && document.activeElement.blur) {
