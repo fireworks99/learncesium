@@ -52,7 +52,7 @@ export default {
 
   computed: {
     maxHeight() {
-      return parseFloat(innerHeight) - 32 - 16 - 16 * 2 - 42;
+      return parseFloat(innerHeight) - 32 - 16 - 16 * 2 - 44;
     }
   },
 
