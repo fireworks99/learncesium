@@ -1,9 +1,9 @@
 <template>
   <Layout :panel_show.sync="panel_show" title="分队战斗行动（尾）绘制-交互绘制">
     <div style="text-align: center; margin-bottom: 8px;">
-      <el-button type="primary" @click="create">开始绘制</el-button>
-      <el-button type="success" @click="update">开始编辑</el-button>
-      <el-button type="danger" @click="clear">删除</el-button>
+      <el-button type="primary" @click="create">开始绘制 startDraw()</el-button>
+      <el-button type="success" @click="update">开始编辑 startModify()</el-button>
+      <el-button type="danger" @click="clear">删除 clearDraw()</el-button>
     </div>
 
     <Collapse title="①工具函数 + ②无数点数图形-公共方法 + ③以下代码，即可完成增删改">
@@ -17,7 +17,6 @@ import Layout from '@/components/Layout.vue';
 import CodeBrower from '@/components/CodeBrower.vue';
 import Collapse from '@/components/Collapse.vue';
 import { mapState } from 'vuex';
-
 
 import { createEntity, showPrimitiveOnMap, script } from './script';
 import { useUnfixed } from '../useUnfixed';
