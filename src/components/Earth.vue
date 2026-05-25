@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { PlotUtilsScript } from "./Panels/scripts";
+import { PlotUtilsScript } from "./Panels/tools";
 import { useUnfixedScript } from "./Panels/useUnfixed";
 
 export default {
