@@ -283,6 +283,7 @@ export default {
       return `
         let primitive = null;
         let pointList = [${s}];
+        
         const attackArrowParams = {
           headHeightFactor: 0.18,
           headWidthFactor: 0.3,

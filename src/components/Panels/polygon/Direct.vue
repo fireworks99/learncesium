@@ -9,7 +9,7 @@
         </div>
 
         <Collapse title="代码">
-          <CodeBrower :code="createScript" language="javascript" :max-height="360"/>
+          <CodeBrower :code="createScript" language="javascript" :max-height="maxHeight"/>
         </Collapse>
       </el-tab-pane>
 
@@ -25,7 +25,6 @@
       </el-tab-pane>
 
     </el-tabs>
-
   </Layout>
 </template>
 
@@ -38,9 +37,9 @@ import { mapState } from 'vuex';
 
 let primitive = null;
 let pointList = [];
-function createPolygon() {
 
-  clearPolygon();
+function create() {
+  clear();
 
   const cartesianPoints = pointList.map(item => {
     return Cesium.Cartesian3.fromDegrees(item[0], item[1]);
@@ -64,7 +63,7 @@ function createPolygon() {
   );
 }
 
-function clearPolygon() {
+function clear() {
   if (primitive) {
     viewer.scene.groundPrimitives.remove(primitive);
     primitive = null;
@@ -101,9 +100,9 @@ export default {
       return `
         let primitive = null;
         let pointList = [${s}];
-        function createPolygon() {
 
-          clearPolygon();
+        function create() {
+          clear();
 
           const cartesianPoints = pointList.map(item => {
             return Cesium.Cartesian3.fromDegrees(item[0], item[1]);
@@ -127,43 +126,51 @@ export default {
           );
         }
 
-        function clearPolygon() {
-          if(primitive) {
+        function clear() {
+          if (primitive) {
             viewer.scene.groundPrimitives.remove(primitive);
             primitive = null;
           }
         }
 
-        createPolygon();
+        create();
       `;
     },
 
     deleteScript() {
       return `
-        function clearPolygon() {
+        function clear() {
           if (primitive) {
             viewer.scene.groundPrimitives.remove(primitive);
             primitive = null;
           }
         }
         
-        clearPolygon();
+        clear();
       `;
-    } 
+    },
+
+    maxHeight() {
+      return parseFloat(innerHeight) - 450;
+    }
   },
   watch: {
     curSelect(val) {
       val === "draw-polygon-direct" && (this.panel_show = true);
     }
   },
+  beforeDestroy() {
+    this.clear();
+  },
   methods: {
     create() {
       pointList = [...this.pointList];
-      createPolygon();
+      create();
     },
     clear() {
-      clearPolygon();
+      clear();
     }
-  }
+
+  }// methods end
 }
 </script>
