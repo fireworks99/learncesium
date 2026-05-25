@@ -49,7 +49,7 @@ export default {
     cursor: pointer;
 
     &:hover {
-      color: rgb(22, 93, 255);
+      color: #00afff;
     }
   }
 
