@@ -21,6 +21,8 @@
     <PolygonDirect />
     <PolygonInteract />
 
+    <DoubleArrowInteract />
+
     <TailedSquadCombatDirect />
     <TailedSquadCombatInteract />
 
@@ -29,6 +31,7 @@
 
 <script>
 import { PlotUtilsScript } from "./Panels/tools";
+import { useFixedScript } from "./Panels/useFixed";
 import { useUnfixedScript } from "./Panels/useUnfixed";
 
 export default {
@@ -40,6 +43,7 @@ export default {
     RectInteract: () => import("./Panels/rectangle/Interact.vue"),
     PolygonDirect: () => import("./Panels/polygon/Direct.vue"),
     PolygonInteract: () => import("./Panels/polygon/Interact.vue"),
+    DoubleArrowInteract: () => import("./Panels/doubleArrow/Interact.vue"),
     TailedSquadCombatDirect: () => import("./Panels/tailedSquadCombat/Direct.vue"),
     TailedSquadCombatInteract: () => import("./Panels/tailedSquadCombat/Interact.vue"),
   },
@@ -49,7 +53,7 @@ export default {
       drawerOpen: false,
       publicScripts: [
         { type: 'success', label: '工具函数 (P.PlotUtils)', value: PlotUtilsScript },
-        { type: 'primary', label: '固定点数图形-公共方法', value: '' },
+        { type: 'primary', label: '固定点数图形-公共方法', value: useFixedScript },
         { type: 'primary', label: '无数点数图形-公共方法', value: useUnfixedScript },
       ],
       curScript: {}
