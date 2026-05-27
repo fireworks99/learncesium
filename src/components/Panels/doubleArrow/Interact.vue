@@ -32,7 +32,7 @@ const {
 });
 
 export default {
-  name: 'doubleArrowInteract',
+  name: 'DoubleArrowInteract',
   components: {
     Layout,
     CodeBrower,

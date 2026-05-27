@@ -8,7 +8,7 @@
       </el-radio-group>
       <div class="btns">
         <i class="el-icon-refresh-right" @click="resetPoint" style="font-size: 24px;"></i>
-        <i class="el-icon-circle-plus-outline" @click="addPoint" style="font-size: 24px;"></i>
+        <i class="el-icon-circle-plus-outline" @click="addPoint" style="font-size: 24px;" v-if="!fixed"></i>
         <i class="el-icon-circle-check" @click="confirmPoints" style="font-size: 24px;"></i>
       </div>
     </div>
@@ -69,7 +69,7 @@
 
         </div>
 
-        <div class="remove-btn" @click="removePoint(index)">
+        <div class="remove-btn" @click="removePoint(index)" v-if="!fixed">
           <i class="el-icon-circle-close" style="font-size: 24px;"></i>
         </div>
 
@@ -87,6 +87,10 @@ export default {
     pointList: {
       type: Array,
       default: []
+    },
+    fixed: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
