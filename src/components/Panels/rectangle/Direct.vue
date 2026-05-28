@@ -1,30 +1,29 @@
 <template>
-  <Layout :panel_show.sync="panel_show" title="矩形绘制-直接绘制">
+  <Layout :panel_show.sync="panel_show" title="钳击绘制-直接绘制">
     <el-tabs v-model="activeName" type="card">
-      <el-tab-pane label="执行" name="exec">
-        <div style="display: flex; align-items: center;">
-          <div style="white-space: nowrap; margin: 0 16px;">经度范围</div>
-          <el-input v-model="selectedSpace.minLon" size="small" clearable></el-input>
-          <span style="margin: 0 16px;">至</span>
-          <el-input v-model="selectedSpace.maxLon" size="small" clearable></el-input>
+
+      <!-- 1. 新增 -->
+      <el-tab-pane label="新增" name="insert">
+        <div style="margin-bottom: 16px;">
+          <PolygonRange :pointList.sync="pointList" @confirm="create" :fixed="true" />
         </div>
 
-        <div style="display: flex; align-items: center; margin-top: 8px;">
-          <div style="white-space: nowrap; margin: 0 16px;">纬度范围</div>
-          <el-input v-model="selectedSpace.minLat" size="small" clearable></el-input>
-          <span style="margin: 0 16px;">至</span>
-          <el-input v-model="selectedSpace.maxLat" size="small" clearable></el-input>
+        <Collapse title="①执行以下代码，即可完成创建">
+          <CodeBrower :code="createScript" language="javascript" :max-height="maxHeight" />
+        </Collapse>
+      </el-tab-pane>
+
+      <!-- 2. 删除 -->
+      <el-tab-pane label="删除" name="delete">
+        <div style="text-align: center; margin-bottom: 8px;">
+          <el-button type="danger" @click="clear">删除</el-button>
         </div>
 
-        <div style="display: flex; align-items: center; margin-top: 8px; justify-content: end;">
-          <el-button @click="clear">清除</el-button>
-          <el-button @click="resetSelectedSpace">重置</el-button>
-          <el-button type="primary" @click="confirmSelectedSpace">确定</el-button>
-        </div>
+        <Collapse title="代码">
+          <CodeBrower :code="deleteScript" language="javascript" />
+        </Collapse>
       </el-tab-pane>
-      <el-tab-pane label="代码" name="code">
-        <CodeBrower :code="codeStr" language="javascript"/>
-      </el-tab-pane>
+
     </el-tabs>
   </Layout>
 </template>
@@ -32,90 +31,127 @@
 <script>
 import Layout from '@/components/Layout.vue';
 import CodeBrower from '@/components/CodeBrower.vue';
+import PolygonRange from '@/components/PolygonRange.vue';
+import Collapse from '@/components/Collapse.vue';
 import { mapState } from 'vuex';
+
+let primitive = null;
+let pointList = [];
+
+function create() {
+  clear();
+
+  const instance = new Cesium.GeometryInstance({
+    geometry: new Cesium.RectangleGeometry({
+      rectangle: new Cesium.Rectangle.fromDegrees(
+        Math.min(pointList[0][0], pointList[1][0]),
+        Math.min(pointList[0][1], pointList[1][1]),
+        Math.max(pointList[0][0], pointList[1][0]),
+        Math.max(pointList[0][1], pointList[1][1])
+      )
+    })
+  });
+
+  primitive = viewer.scene.groundPrimitives.add(
+    new Cesium.GroundPrimitive({
+      geometryInstances: instance,
+      appearance: new Cesium.Appearance({
+        material: Cesium.Material.fromType("Color", {
+          color: Cesium.Color.SNOW.withAlpha(0.7)
+        }),
+      })
+    })
+  );
+}
+
+function clear() {
+  if (primitive) {
+    viewer.scene.groundPrimitives.remove(primitive);
+    primitive = null;
+  }
+}
 
 export default {
   name: 'RectDirect',
   components: {
     Layout,
-    CodeBrower
+    CodeBrower,
+    PolygonRange,
+    Collapse
   },
   data() {
     return {
       panel_show: false,
-      activeName: 'exec',
-      selectedSpace: {
-        minLon: '',
-        maxLon: '',
-        minLat: '',
-        maxLat: ''
-      },
-      newRectEntity: null,
+      activeName: 'insert',
+      pointList: [
+        [100, 30],
+        [106, 35],
+      ]
     }
   },
   computed: {
     ...mapState(['curSelect']),
 
-    rangeObj() {
-      const { minLon, maxLon, minLat, maxLat } = this.selectedSpace;
+    createScript() {
+      let s = "";
+      this.pointList.forEach(item => {
+        s += `[${item[0]}, ${item[1]}],`;
+      });
+      return `
+        let primitive = null;
+        let pointList = [${s}];
+        
+        function create() {
+          clear();
 
-      // 检查是否有空值
-      if (!minLon || !maxLon || !minLat || !maxLat) {
-        return '';
-      }
+          const instance = new Cesium.GeometryInstance({
+            geometry: new Cesium.RectangleGeometry({
+              rectangle: new Cesium.Rectangle.fromDegrees(
+                Math.min(pointList[0][0], pointList[1][0]),
+                Math.min(pointList[0][1], pointList[1][1]),
+                Math.max(pointList[0][0], pointList[1][0]),
+                Math.max(pointList[0][1], pointList[1][1])
+              )
+            })
+          });
 
-      // 转换为数字
-      const minLonNum = parseFloat(minLon);
-      const maxLonNum = parseFloat(maxLon);
-      const minLatNum = parseFloat(minLat);
-      const maxLatNum = parseFloat(maxLat);
+          primitive = viewer.scene.groundPrimitives.add(
+            new Cesium.GroundPrimitive({
+              geometryInstances: instance,
+              appearance: new Cesium.Appearance({
+                material: Cesium.Material.fromType("Color", {
+                  color: Cesium.Color.SNOW.withAlpha(0.7)
+                }),
+              })
+            })
+          );
+        }
 
-      // 检查是否为有效数字
-      if (isNaN(minLonNum) || isNaN(maxLonNum) || isNaN(minLatNum) || isNaN(maxLatNum)) {
-        return '';
-      }
+        function clear() {
+          if (primitive) {
+            viewer.scene.groundPrimitives.remove(primitive);
+            primitive = null;
+          }
+        }
 
-      // 检查经度范围是否有效（通常经度范围 -180 到 180）
-      if (minLonNum < -180 || minLonNum > 180 || maxLonNum < -180 || maxLonNum > 180) {
-        return '';
-      }
-
-      // 检查纬度范围是否有效（通常纬度范围 -90 到 90）
-      if (minLatNum < -90 || minLatNum > 90 || maxLatNum < -90 || maxLatNum > 90) {
-        return '';
-      }
-
-      // 检查 min 是否大于 max
-      if (minLonNum > maxLonNum || minLatNum > maxLatNum) {
-        return '';
-      }
-
-      return { minLonNum, maxLonNum, minLatNum, maxLatNum };
+        create();
+      `;
     },
 
-    codeStr() {
-      if(!this.rangeObj) {
-        return `viewer.entities.add({
-                  rectangle: {
-                    coordinates: Cesium.Rectangle.fromDegrees(minLonNum, minLatNum, maxLonNum, maxLatNum),
-                    material: Cesium.Color.WHITE.withAlpha(0.3),
-                    height: 0,
-                    outline: true,
-                    outlineColor: Cesium.Color.RED,
-                  }
-                });`
-      } else {
-        const { minLonNum, maxLonNum, minLatNum, maxLatNum } = this.rangeObj;
-        return `viewer.entities.add({
-                  rectangle: {
-                    coordinates: Cesium.Rectangle.fromDegrees(${minLonNum}, ${minLatNum}, ${maxLonNum}, ${maxLatNum}),
-                    material: Cesium.Color.WHITE.withAlpha(0.3),
-                    height: 0,
-                    outline: true,
-                    outlineColor: Cesium.Color.RED,
-                  }
-                });`
-      }
+    deleteScript() {
+      return `
+        function clear() {
+          if (primitive) {
+            viewer.scene.groundPrimitives.remove(primitive);
+            primitive = null;
+          }
+        }
+        clear();
+      `;
+    },
+
+    maxHeight() {
+      return parseFloat(innerHeight) - 400;
     }
   },
   watch: {
@@ -123,54 +159,18 @@ export default {
       val === "draw-rectangle-direct" && (this.panel_show = true);
     }
   },
-
-  mounted() {
-
-  },
-
   beforeDestroy() {
     this.clear();
   },
-
   methods: {
-    // 重置手填范围
-    resetSelectedSpace() {
-      this.selectedSpace = {
-        minLon: '',
-        maxLon: '',
-        minLat: '',
-        maxLat: ''
-      };
+    create() {
+      pointList = [...this.pointList];
+      create();
     },
-
     clear() {
-      if(this.newRectEntity) {
-        viewer.entities.remove(this.newRectEntity);
-        this.newRectEntity = null;
-      }
-    },
+      clear();
+    }
 
-    // 确认手填范围
-    confirmSelectedSpace() {
-      if (!this.rangeObj) {
-        this.$message.warning("手填范围无效，请重新填写");
-        return;
-      }
-
-      const { minLonNum, maxLonNum, minLatNum, maxLatNum } = this.rangeObj;
-
-      this.clear();
-
-      this.newRectEntity = viewer.entities.add({
-        rectangle: {
-          coordinates: Cesium.Rectangle.fromDegrees(minLonNum, minLatNum, maxLonNum, maxLatNum),
-          material: Cesium.Color.WHITE.withAlpha(0.3),
-          height: 0,
-          outline: true,
-          outlineColor: Cesium.Color.RED,
-        }
-      });
-    },
   }// methods end
 }
 </script>
