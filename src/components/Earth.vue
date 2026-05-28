@@ -15,6 +15,9 @@
       <CodeBrower :code="curScript?.value || ''" language="javascript" :maxHeight="maxHeight" />
     </CustomDrawer>
 
+    <CircleDirect />
+    <CircleInteract />
+
     <RectDirect />
     <RectInteract />
 
@@ -40,6 +43,8 @@ export default {
   components: {
     CustomDrawer: () => import("./CustomDrawer.vue"),
     CodeBrower: () => import("./CodeBrower.vue"),
+    CircleDirect: () => import("./Panels/circle/Direct.vue"),
+    CircleInteract: () => import("./Panels/circle/Interact.vue"),
     RectDirect: () => import("./Panels/rectangle/Direct.vue"),
     RectInteract: () => import("./Panels/rectangle/Interact.vue"),
     PolygonDirect: () => import("./Panels/polygon/Direct.vue"),

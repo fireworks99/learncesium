@@ -1,5 +1,5 @@
 <template>
-  <Layout :panel_show.sync="panel_show" title="矩形绘制-直接绘制">
+  <Layout :panel_show.sync="panel_show" title="圆绘制-直接绘制">
     <el-tabs v-model="activeName" type="card">
 
       <!-- 1. 新增 -->
@@ -8,7 +8,7 @@
           <PolygonRange :pointList.sync="pointList" @confirm="create" :fixed="true" />
         </div>
 
-        <Collapse title="①执行以下代码，即可完成创建">
+        <Collapse title="①工具函数 + ②以下代码，即可完成创建">
           <CodeBrower :code="createScript" language="javascript" :max-height="maxHeight" />
         </Collapse>
       </el-tab-pane>
@@ -34,6 +34,7 @@ import CodeBrower from '@/components/CodeBrower.vue';
 import PolygonRange from '@/components/PolygonRange.vue';
 import Collapse from '@/components/Collapse.vue';
 import { mapState } from 'vuex';
+import { P } from '../tools';
 
 let primitive = null;
 let pointList = [];
@@ -41,15 +42,19 @@ let pointList = [];
 function create() {
   clear();
 
+  const arr = [];
+  pointList.forEach(item => {
+    arr.push(P.PlotUtils.lonLatToCartesian3(item));
+  });
+
+  const distance = Cesium.Cartesian3.distance(arr[0], arr[1]);
+
   const instance = new Cesium.GeometryInstance({
-    geometry: new Cesium.RectangleGeometry({
-      rectangle: new Cesium.Rectangle.fromDegrees(
-        Math.min(pointList[0][0], pointList[1][0]),
-        Math.min(pointList[0][1], pointList[1][1]),
-        Math.max(pointList[0][0], pointList[1][0]),
-        Math.max(pointList[0][1], pointList[1][1])
-      )
-    })
+    geometry: new Cesium.EllipseGeometry({
+      center: arr[0],
+      semiMajorAxis: distance,
+      semiMinorAxis: distance,
+    }),
   });
 
   primitive = viewer.scene.groundPrimitives.add(
@@ -72,7 +77,7 @@ function clear() {
 }
 
 export default {
-  name: 'RectDirect',
+  name: 'CircleDirect',
   components: {
     Layout,
     CodeBrower,
@@ -104,15 +109,19 @@ export default {
         function create() {
           clear();
 
+          const arr = [];
+          pointList.forEach(item => {
+            arr.push(P.PlotUtils.lonLatToCartesian3(item));
+          });
+
+          const distance = Cesium.Cartesian3.distance(arr[0], arr[1]);
+
           const instance = new Cesium.GeometryInstance({
-            geometry: new Cesium.RectangleGeometry({
-              rectangle: new Cesium.Rectangle.fromDegrees(
-                Math.min(pointList[0][0], pointList[1][0]),
-                Math.min(pointList[0][1], pointList[1][1]),
-                Math.max(pointList[0][0], pointList[1][0]),
-                Math.max(pointList[0][1], pointList[1][1])
-              )
-            })
+            geometry: new Cesium.EllipseGeometry({
+              center: arr[0],
+              semiMajorAxis: distance,
+              semiMinorAxis: distance,
+            }),
           });
 
           primitive = viewer.scene.groundPrimitives.add(
@@ -156,7 +165,7 @@ export default {
   },
   watch: {
     curSelect(val) {
-      val === "draw-rectangle-direct" && (this.panel_show = true);
+      val === "draw-circle-direct" && (this.panel_show = true);
     }
   },
   beforeDestroy() {
