@@ -18,6 +18,9 @@
     <CircleDirect />
     <CircleInteract />
 
+    <ElliseDirect />
+    <EllipseInteract />
+
     <RectDirect />
     <RectInteract />
 
@@ -45,6 +48,8 @@ export default {
     CodeBrower: () => import("./CodeBrower.vue"),
     CircleDirect: () => import("./Panels/circle/Direct.vue"),
     CircleInteract: () => import("./Panels/circle/Interact.vue"),
+    ElliseDirect: () => import("./Panels/ellipse/Direct.vue"),
+    EllipseInteract: () => import("./Panels/ellipse/Interact.vue"),
     RectDirect: () => import("./Panels/rectangle/Direct.vue"),
     RectInteract: () => import("./Panels/rectangle/Interact.vue"),
     PolygonDirect: () => import("./Panels/polygon/Direct.vue"),
