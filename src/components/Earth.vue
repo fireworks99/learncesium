@@ -21,6 +21,9 @@
     <ElliseDirect />
     <EllipseInteract />
 
+    <LuneDirect />
+    <LuneInteract />
+
     <RectDirect />
     <RectInteract />
 
@@ -50,6 +53,8 @@ export default {
     CircleInteract: () => import("./Panels/circle/Interact.vue"),
     ElliseDirect: () => import("./Panels/ellipse/Direct.vue"),
     EllipseInteract: () => import("./Panels/ellipse/Interact.vue"),
+    LuneDirect: () => import("./Panels/lune/Direct.vue"),
+    LuneInteract: () => import("./Panels/lune/Interact.vue"),
     RectDirect: () => import("./Panels/rectangle/Direct.vue"),
     RectInteract: () => import("./Panels/rectangle/Interact.vue"),
     PolygonDirect: () => import("./Panels/polygon/Direct.vue"),
