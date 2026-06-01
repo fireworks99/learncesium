@@ -24,6 +24,9 @@
     <LuneDirect />
     <LuneInteract />
 
+    <SectorDirect />
+    <SectorInteract />
+
     <RectDirect />
     <RectInteract />
 
@@ -55,6 +58,8 @@ export default {
     EllipseInteract: () => import("./Panels/ellipse/Interact.vue"),
     LuneDirect: () => import("./Panels/lune/Direct.vue"),
     LuneInteract: () => import("./Panels/lune/Interact.vue"),
+    SectorDirect: () => import("./Panels/sector/Direct.vue"),
+    SectorInteract: () => import("./Panels/sector/Interact.vue"),
     RectDirect: () => import("./Panels/rectangle/Direct.vue"),
     RectInteract: () => import("./Panels/rectangle/Interact.vue"),
     PolygonDirect: () => import("./Panels/polygon/Direct.vue"),
@@ -110,15 +115,45 @@ export default {
         timeline: false, // 页面下方的时间条
         homeButton: false,
         animation: false, // 左下角圆盘 速度控制器
-        imageryProvider: new Cesium.ArcGisMapServerImageryProvider({
+        imageryProvider: false,
+        terrainProvider: false
+      });
+
+      // 移除 Cesium 默认的影像图层
+      viewer.imageryLayers.removeAll();
+
+      // 添加影像图层
+      viewer.imageryLayers.addImageryProvider(
+        window.APP_CONFIG.online_map ? 
+        new Cesium.ArcGisMapServerImageryProvider({
           url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
           enablePickFeatures: false,
-        }),
-        terrainProvider: Cesium.createWorldTerrain({
+        })  : 
+        new Cesium.UrlTemplateImageryProvider({
+          url: window.APP_CONFIG.urltemplate_api + `{${window.APP_CONFIG.first}}/{${window.APP_CONFIG.second}}/{${window.APP_CONFIG.third}}.` + window.APP_CONFIG.format,
+          tilingScheme: window.APP_CONFIG.urltemplate_epsg === "4326" ? new Cesium.GeographicTilingScheme() : new Cesium.WebMercatorTilingScheme(),
+          maximumLevel: window.APP_CONFIG.max_zoom || 6
+        })
+      );
+
+      // 添加全球地形
+      viewer.terrainProvider = window.APP_CONFIG.online_map ? 
+        Cesium.createWorldTerrain({
           requestVertexNormals: true,
           requestWaterMask: true
-        })
-      });
+        }) :
+        new Cesium.CesiumTerrainProvider({
+          url: window.APP_CONFIG.terrain_api, // 自定义地形服务的 URL
+        });
+
+      // 地形夸张
+      viewer.scene.globe.terrainExaggeration = 10;
+
+      // 关闭大气散射
+      viewer.scene.skyAtmosphere.show = false;
+
+      // 关闭太阳光照
+      viewer.scene.sun.show = false;
 
       //隐藏 商标版权与数据源
       viewer.cesiumWidget.creditContainer.style.display = 'none';
