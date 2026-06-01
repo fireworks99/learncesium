@@ -1,12 +1,17 @@
 <template>
   <div id="cesium_container">
 
+    <div :class="['mock-btn', sidebarOpen ? 'expand' : 'collapse']" :title="sidebarOpen ? '收起' : '展开'" style="top: 5px;" @click="toggleSidebar">
+      <i :class="sidebarOpen ? 'el-icon-arrow-left' : 'el-icon-arrow-right'" style="color: #fff;"></i>
+    </div>
+
     <el-popover placement="left" trigger="click" ref="popover">
-      <el-button v-for="(item, index) in publicScripts" :key="item.label" :type="item.type" @click="handleScript(index)">
+      <el-button v-for="(item, index) in publicScripts" :key="item.label" :type="item.type"
+        @click="handleScript(index)">
         {{ item.label }}
       </el-button>
 
-      <div class="mock-btn" title="公共脚本" slot="reference">
+      <div class="mock-btn" title="公共脚本" slot="reference" style="top: calc(5px + 32px + 8px);right: 5px;">
         <img src="@/assets/images/js.svg" alt="">
       </div>
     </el-popover>
@@ -46,6 +51,7 @@
 import { PlotUtilsScript } from "./Panels/tools";
 import { useFixedScript } from "./Panels/useFixed";
 import { useUnfixedScript } from "./Panels/useUnfixed";
+import { mapState } from "vuex";
 
 export default {
   name: 'Earth',
@@ -83,6 +89,7 @@ export default {
   },
 
   computed: {
+    ...mapState(['sidebarOpen']),
     maxHeight() {
       return parseFloat(innerHeight) - 32 - 16 - 16 * 2 - 44;
     }
@@ -124,20 +131,20 @@ export default {
 
       // 添加影像图层
       viewer.imageryLayers.addImageryProvider(
-        window.APP_CONFIG.online_map ? 
-        new Cesium.ArcGisMapServerImageryProvider({
-          url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
-          enablePickFeatures: false,
-        })  : 
-        new Cesium.UrlTemplateImageryProvider({
-          url: window.APP_CONFIG.urltemplate_api + `{${window.APP_CONFIG.first}}/{${window.APP_CONFIG.second}}/{${window.APP_CONFIG.third}}.` + window.APP_CONFIG.format,
-          tilingScheme: window.APP_CONFIG.urltemplate_epsg === "4326" ? new Cesium.GeographicTilingScheme() : new Cesium.WebMercatorTilingScheme(),
-          maximumLevel: window.APP_CONFIG.max_zoom || 6
-        })
+        window.APP_CONFIG.online_map ?
+          new Cesium.ArcGisMapServerImageryProvider({
+            url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+            enablePickFeatures: false,
+          }) :
+          new Cesium.UrlTemplateImageryProvider({
+            url: window.APP_CONFIG.urltemplate_api + `{${window.APP_CONFIG.first}}/{${window.APP_CONFIG.second}}/{${window.APP_CONFIG.third}}.` + window.APP_CONFIG.format,
+            tilingScheme: window.APP_CONFIG.urltemplate_epsg === "4326" ? new Cesium.GeographicTilingScheme() : new Cesium.WebMercatorTilingScheme(),
+            maximumLevel: window.APP_CONFIG.max_zoom || 6
+          })
       );
 
       // 添加全球地形
-      viewer.terrainProvider = window.APP_CONFIG.online_map ? 
+      viewer.terrainProvider = window.APP_CONFIG.online_map ?
         Cesium.createWorldTerrain({
           requestVertexNormals: true,
           requestWaterMask: true
@@ -181,6 +188,10 @@ export default {
 
       // 3. 打开抽屉
       this.drawerOpen = true;
+    },
+
+    toggleSidebar() {
+      this.$store.commit('SET_SIDEBAR_OPEN', !this.sidebarOpen);
     }
   }// methods end
 }
@@ -195,8 +206,6 @@ export default {
 
   .mock-btn {
     position: absolute;
-    top: calc(5px + 32px + 8px);
-    right: 5px;
     z-index: 1;
     padding: 4px;
 
@@ -221,6 +230,14 @@ export default {
 
     img {
       width: 100%;
+    }
+
+    &.collapse {
+      left: 5px;
+    }
+
+    &.expand {
+      left: calc(#{$sidebar-width} + 5px);
     }
   }
 }

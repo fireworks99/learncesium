@@ -45,7 +45,7 @@ export default {
         const maxTop = window.innerHeight - elHeight;
 
         // 限制边界
-        newLeft = Math.min(Math.max(LEFT_MIN, newLeft), maxLeft);
+        newLeft = Math.min(Math.max(store.state.sidebarOpen ? LEFT_MIN : 0, newLeft), maxLeft);
         newTop = Math.min(Math.max(0, newTop), maxTop);
 
         el.style.left = newLeft + 'px';

@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar_wrapper">
+  <div :class="['sidebar_wrapper', { collapse: !sidebarOpen }]">
     <el-menu class="my-el-menu" background-color="transparent" text-color="#E0E0E0"
       active-text-color="#00AFFF" @select="handleSelect">
 
@@ -30,8 +30,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'Sidebar',
+
   data() {
     return {
       graph: [
@@ -60,6 +63,11 @@ export default {
       ]
     }
   },
+
+  computed: {
+    ...mapState(['sidebarOpen']),
+  },
+
   methods: {
     handleSelect(index, indexPath) {
       this.$store.commit("SET_CUR_SELECT", index);
@@ -77,7 +85,12 @@ export default {
   backdrop-filter: blur(10px);
   border-right: 1px solid rgba(0, 175, 255, 0.2);
   box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
+  transition: width .15s ease;
+
+  &.collapse {
+    width: 0;
+    overflow: hidden;
+  }
 }
 </style>
 

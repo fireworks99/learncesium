@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     currMaxZIndex: 1,
     curSelect: '',
-    stopLast: null
+    stopLast: null,
+    sidebarOpen: true
   },
   getters: {
   },
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     SET_STOP_LAST(state, val) {
       state.stopLast = val;
+    },
+    SET_SIDEBAR_OPEN(state, val) {
+      state.sidebarOpen = val;
     }
   },
   actions: {

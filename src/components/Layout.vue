@@ -62,7 +62,7 @@ export default {
 .panel_wrapper {
   position: absolute;
   left: calc(#{$sidebar-width} + 16px);
-  top: 16px;
+  top: calc(5px + 32px + 16px);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(0, 175, 255, 0.3);
