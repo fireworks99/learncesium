@@ -8,7 +8,7 @@
           <PolygonRange :pointList.sync="pointList" @confirm="create" />
         </div>
 
-        <Collapse title="代码">
+        <Collapse title="执行以下代码，即可完成创建">
           <CodeBrower :code="createScript" language="javascript" :max-height="maxHeight"/>
         </Collapse>
       </el-tab-pane>
