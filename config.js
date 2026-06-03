@@ -1,5 +1,5 @@
 window.APP_CONFIG = {
-  online_map: true,
+  online_map: false,
   urltemplate_api: "http://localhost:8093/",
   urltemplate_epsg: "3857",
   first: 'z',
