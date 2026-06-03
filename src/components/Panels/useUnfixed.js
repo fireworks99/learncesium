@@ -99,6 +99,8 @@ export function useUnfixed(options = {}) {
       } else {
         // 当鼠标移动时，修改最后一个值
         if (pointList.length >= 2) {
+          options.infinite ? 
+          pointList.push(cartesian.clone()) :
           pointList.splice(pointList.length - 1, 1, cartesian.clone());
         }
       }

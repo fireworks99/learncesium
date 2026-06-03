@@ -41,6 +41,9 @@
     <PolygonDirect />
     <PolygonInteract />
 
+
+    <FreeHandPolygonInteract />
+
     <DoubleArrowDirect />
     <DoubleArrowInteract />
 
@@ -75,6 +78,8 @@ export default {
     ClosedCurveInteract: () => import("./Panels/closedCurve/Interact.vue"),
     PolygonDirect: () => import("./Panels/polygon/Direct.vue"),
     PolygonInteract: () => import("./Panels/polygon/Interact.vue"),
+    
+    FreeHandPolygonInteract: () => import("./Panels/freeHandPolygon/Interact.vue"),
     DoubleArrowDirect: () => import("./Panels/doubleArrow/Direct.vue"),
     DoubleArrowInteract: () => import("./Panels/doubleArrow/Interact.vue"),
     TailedSquadCombatDirect: () => import("./Panels/tailedSquadCombat/Direct.vue"),
