@@ -515,7 +515,7 @@ export default {
     },
 
     maxHeight() {
-      return parseFloat(innerHeight) - 450;
+      return parseFloat(innerHeight) - 488;
     }
   },
   watch: {

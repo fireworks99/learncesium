@@ -48,7 +48,7 @@ export default {
     ...mapState(['curSelect', 'stopLast']),
 
     maxHeight() {
-      return parseFloat(innerHeight) - 250;
+      return parseFloat(innerHeight) - 288;
     }
   },
   watch: {

@@ -35,6 +35,8 @@
     <RectDirect />
     <RectInteract />
 
+    <ClosedCurveInteract />
+
     <PolygonDirect />
     <PolygonInteract />
 
@@ -68,6 +70,8 @@ export default {
     SectorInteract: () => import("./Panels/sector/Interact.vue"),
     RectDirect: () => import("./Panels/rectangle/Direct.vue"),
     RectInteract: () => import("./Panels/rectangle/Interact.vue"),
+    
+    ClosedCurveInteract: () => import("./Panels/closedCurve/Interact.vue"),
     PolygonDirect: () => import("./Panels/polygon/Direct.vue"),
     PolygonInteract: () => import("./Panels/polygon/Interact.vue"),
     DoubleArrowDirect: () => import("./Panels/doubleArrow/Direct.vue"),

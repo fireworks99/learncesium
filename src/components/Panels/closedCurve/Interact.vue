@@ -1,5 +1,5 @@
 <template>
-  <Layout :panel_show.sync="panel_show" title="分队战斗行动（尾）绘制-交互绘制">
+  <Layout :panel_show.sync="panel_show" title="曲线面绘制-交互绘制">
     <div style="text-align: center; margin-bottom: 8px;">
       <el-button type="primary" @click="create">开始绘制 startDraw()</el-button>
       <el-button type="success" @click="update">开始编辑 startModify()</el-button>
@@ -26,13 +26,13 @@ const {
   clearDraw,
   startModify
 } = useUnfixed({
-  minP: 2,
+  minP: 3,
   createEntity,
   showPrimitiveOnMap
 });
 
 export default {
-  name: 'TailedSquadCombatInteract',
+  name: 'ClosedCurveInteract',
   components: {
     Layout,
     CodeBrower,
@@ -53,7 +53,7 @@ export default {
   },
   watch: {
     curSelect(val) {
-      val === "draw-tailedSquadCombat-interact" && (this.panel_show = true);
+      val === "draw-closedCurve-interact" && (this.panel_show = true);
     }
   },
   beforeDestroy() {
