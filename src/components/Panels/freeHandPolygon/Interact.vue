@@ -6,7 +6,7 @@
       <el-button type="danger" @click="clear">删除 clearDraw()</el-button>
     </div>
 
-    <Collapse title="①无数点数图形-公共方法 + ③以下代码，即可完成增删改">
+    <Collapse title="①无数点数图形-公共方法 + ②以下代码，即可完成增删改">
       <CodeBrower :code="script" language="javascript" :maxHeight="maxHeight"/>
     </Collapse>
   </Layout>

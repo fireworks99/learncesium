@@ -38,7 +38,7 @@ export function showPrimitiveOnMap(pointList) {
 
 export const script = `
   // 过程载体
-  export function createEntity(pointList) {
+  function createEntity(pointList) {
 
     const update = () => {
       return new Cesium.PolygonHierarchy(pointList);
@@ -55,7 +55,7 @@ export const script = `
   }
 
   // 最终载体
-  export function showPrimitiveOnMap(pointList) {
+  function showPrimitiveOnMap(pointList) {
 
     const instance = new Cesium.GeometryInstance({
       geometry: new Cesium.PolygonGeometry({
@@ -81,6 +81,7 @@ export const script = `
     startModify
   } = useUnfixed({
     minP: 3,
+    infinite: true,
     createEntity,
     showPrimitiveOnMap
   });
