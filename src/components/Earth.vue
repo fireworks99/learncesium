@@ -50,6 +50,9 @@
     <DoubleArrowDirect />
     <DoubleArrowInteract />
 
+    <StraightArrowDirect />
+    <StraightArrowInteract />
+
     <TailedSquadCombatDirect />
     <TailedSquadCombatInteract />
 
@@ -87,6 +90,8 @@ export default {
     GatheringPlaceInteract: () => import("./Panels/gatheringPlace/Interact.vue"),
     DoubleArrowDirect: () => import("./Panels/doubleArrow/Direct.vue"),
     DoubleArrowInteract: () => import("./Panels/doubleArrow/Interact.vue"),
+    StraightArrowDirect: () => import("./Panels/straightArrow/Direct.vue"),
+    StraightArrowInteract: () => import("./Panels/straightArrow/Interact.vue"),
     TailedSquadCombatDirect: () => import("./Panels/tailedSquadCombat/Direct.vue"),
     TailedSquadCombatInteract: () => import("./Panels/tailedSquadCombat/Interact.vue"),
   },
