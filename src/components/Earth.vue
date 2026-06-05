@@ -44,6 +44,9 @@
     <FreeHandPolygonDirect />
     <FreeHandPolygonInteract />
 
+    <GatheringPlaceDirect />
+    <GatheringPlaceInteract />
+
     <DoubleArrowDirect />
     <DoubleArrowInteract />
 
@@ -80,6 +83,8 @@ export default {
     PolygonInteract: () => import("./Panels/polygon/Interact.vue"),
     FreeHandPolygonDirect: () => import("./Panels/freeHandPolygon/Direct.vue"),
     FreeHandPolygonInteract: () => import("./Panels/freeHandPolygon/Interact.vue"),
+    GatheringPlaceDirect: () => import("./Panels/gatheringPlace/Direct.vue"),
+    GatheringPlaceInteract: () => import("./Panels/gatheringPlace/Interact.vue"),
     DoubleArrowDirect: () => import("./Panels/doubleArrow/Direct.vue"),
     DoubleArrowInteract: () => import("./Panels/doubleArrow/Interact.vue"),
     TailedSquadCombatDirect: () => import("./Panels/tailedSquadCombat/Direct.vue"),
