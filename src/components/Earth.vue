@@ -65,6 +65,9 @@
     <TailedAttackArrowDirect />
     <TailedAttackArrowInteract />
 
+    <SquadCombatDirect />
+    <SquadCombatInteract />
+
     <TailedSquadCombatDirect />
     <TailedSquadCombatInteract />
 
@@ -112,6 +115,8 @@ export default {
     AttackArrowInteract: () => import("./Panels/attackArrow/Interact.vue"),
     TailedAttackArrowDirect: () => import("./Panels/tailedAttackArrow/Direct.vue"),
     TailedAttackArrowInteract: () => import("./Panels/tailedAttackArrow/Interact.vue"),
+    SquadCombatDirect: () => import("./Panels/squadCombat/Direct.vue"),
+    SquadCombatInteract: () => import("./Panels/squadCombat/Interact.vue"),
     TailedSquadCombatDirect: () => import("./Panels/tailedSquadCombat/Direct.vue"),
     TailedSquadCombatInteract: () => import("./Panels/tailedSquadCombat/Interact.vue"),
   },
