@@ -56,6 +56,9 @@
     <FineArrowDirect />
     <FineArrowInteract />
 
+    <AssaultDirectionDirect />
+    <AssaultDirectionInteract />
+
     <TailedSquadCombatDirect />
     <TailedSquadCombatInteract />
 
@@ -97,6 +100,8 @@ export default {
     StraightArrowInteract: () => import("./Panels/straightArrow/Interact.vue"),
     FineArrowDirect: () => import("./Panels/fineArrow/Direct.vue"),
     FineArrowInteract: () => import("./Panels/fineArrow/Interact.vue"),
+    AssaultDirectionDirect: () => import("./Panels/assaultDirection/Direct.vue"),
+    AssaultDirectionInteract: () => import("./Panels/assaultDirection/Interact.vue"),
     TailedSquadCombatDirect: () => import("./Panels/tailedSquadCombat/Direct.vue"),
     TailedSquadCombatInteract: () => import("./Panels/tailedSquadCombat/Interact.vue"),
   },
