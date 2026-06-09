@@ -29,6 +29,9 @@
     <PolylineDirect />
     <PolylineInteract />
 
+    <FreeHandPolylineDirect />
+    <FreeHandPolylineInteract />
+
     <CircleDirect />
     <CircleInteract />
 
@@ -102,8 +105,8 @@ export default {
     CurveInteract: () => import("./Panels/curve/Interact.vue"),
     PolylineDirect: () => import("./Panels/polyline/Direct.vue"),
     PolylineInteract: () => import("./Panels/polyline/Interact.vue"),
-
-    
+    FreeHandPolylineDirect: () => import("./Panels/freeHandPolyline/Direct.vue"),
+    FreeHandPolylineInteract: () => import("./Panels/freeHandPolyline/Interact.vue"),
     CircleDirect: () => import("./Panels/circle/Direct.vue"),
     CircleInteract: () => import("./Panels/circle/Interact.vue"),
     ElliseDirect: () => import("./Panels/ellipse/Direct.vue"),
