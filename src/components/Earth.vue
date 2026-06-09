@@ -23,6 +23,9 @@
     <ArcDirect />
     <ArcInteract />
 
+    <CurveDirect />
+    <CurveInteract />
+
     <CircleDirect />
     <CircleInteract />
 
@@ -92,6 +95,10 @@ export default {
     
     ArcDirect: () => import("./Panels/arc/Direct.vue"),
     ArcInteract: () => import("./Panels/arc/Interact.vue"),
+    CurveDirect: () => import("./Panels/curve/Direct.vue"),
+    CurveInteract: () => import("./Panels/curve/Interact.vue"),
+    
+    
     CircleDirect: () => import("./Panels/circle/Direct.vue"),
     CircleInteract: () => import("./Panels/circle/Interact.vue"),
     ElliseDirect: () => import("./Panels/ellipse/Direct.vue"),
