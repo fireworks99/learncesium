@@ -26,6 +26,9 @@
     <CurveDirect />
     <CurveInteract />
 
+    <PolylineDirect />
+    <PolylineInteract />
+
     <CircleDirect />
     <CircleInteract />
 
@@ -97,7 +100,9 @@ export default {
     ArcInteract: () => import("./Panels/arc/Interact.vue"),
     CurveDirect: () => import("./Panels/curve/Direct.vue"),
     CurveInteract: () => import("./Panels/curve/Interact.vue"),
-    
+    PolylineDirect: () => import("./Panels/polyline/Direct.vue"),
+    PolylineInteract: () => import("./Panels/polyline/Interact.vue"),
+
     
     CircleDirect: () => import("./Panels/circle/Direct.vue"),
     CircleInteract: () => import("./Panels/circle/Interact.vue"),
