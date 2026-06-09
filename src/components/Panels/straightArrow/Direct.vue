@@ -5,7 +5,7 @@
       <!-- 1. 新增 -->
       <el-tab-pane label="新增" name="insert">
         <div style="margin-bottom: 16px;">
-          <PolygonRange :pointList.sync="pointList" @confirm="create" :fixed="true"/>
+          <PolygonRange :pointList.sync="pointList" @confirm="create"/>
         </div>
 
         <Collapse title="执行以下代码，即可完成创建">
