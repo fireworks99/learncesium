@@ -20,6 +20,9 @@
       <CodeBrower :code="curScript?.value || ''" language="javascript" :maxHeight="maxHeight" />
     </CustomDrawer>
 
+    <ArcDirect />
+    <ArcInteract />
+
     <CircleDirect />
     <CircleInteract />
 
@@ -85,6 +88,10 @@ export default {
   components: {
     CustomDrawer: () => import("./CustomDrawer.vue"),
     CodeBrower: () => import("./CodeBrower.vue"),
+    
+    
+    ArcDirect: () => import("./Panels/arc/Direct.vue"),
+    ArcInteract: () => import("./Panels/arc/Interact.vue"),
     CircleDirect: () => import("./Panels/circle/Direct.vue"),
     CircleInteract: () => import("./Panels/circle/Interact.vue"),
     ElliseDirect: () => import("./Panels/ellipse/Direct.vue"),
