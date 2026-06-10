@@ -20,6 +20,9 @@
       <CodeBrower :code="curScript?.value || ''" language="javascript" :maxHeight="maxHeight" />
     </CustomDrawer>
 
+    <PointDirect />
+    <PointInteract />
+
     <ArcDirect />
     <ArcInteract />
 
@@ -97,8 +100,8 @@ export default {
   components: {
     CustomDrawer: () => import("./CustomDrawer.vue"),
     CodeBrower: () => import("./CodeBrower.vue"),
-    
-    
+    PointDirect: () => import("./Panels/point/Direct.vue"),
+    PointInteract: () => import("./Panels/point/Interact.vue"),
     ArcDirect: () => import("./Panels/arc/Direct.vue"),
     ArcInteract: () => import("./Panels/arc/Interact.vue"),
     CurveDirect: () => import("./Panels/curve/Direct.vue"),
